@@ -16,7 +16,7 @@ import json
 import sys
 import zipfile
 import pickle
-from EfficientSurfaceCodeSim.error_model import *
+from FlexibleQECSim.error_model import *
 import time
 
 

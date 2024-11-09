@@ -1,4 +1,4 @@
-from EfficientSurfaceCodeSim.instruction_generators import *
+from FlexibleQECSim.instruction_generators import *
 
 
 

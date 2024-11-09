@@ -1,5 +1,5 @@
-from EfficientSurfaceCodeSim.circuit_builder import *
-from EfficientSurfaceCodeSim.error_model import *
+from FlexibleQECSim.circuit_builder import *
+from FlexibleQECSim.error_model import *
 
 import time
 
