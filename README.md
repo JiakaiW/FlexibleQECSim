@@ -1,7 +1,7 @@
 # FlexibleQECSim
 
 ```
-pip3 install git+https://github.com/JiakaiW/EfficientSurfaceCodeSim
+pip3 install git+https://github.com/JiakaiW/FlexibleQECSim
 ```
 
 ![Structure of the package](assets/PackageDescription.png)
