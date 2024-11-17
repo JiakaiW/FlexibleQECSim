@@ -2,8 +2,8 @@ import os
 
 from setuptools import setup, find_namespace_packages
 
-DIST_NAME = "EfficientSurfaceCodeSim"
-PACKAGE_NAME = "EfficientSurfaceCodeSim"
+DIST_NAME = "FlexibleQECSim"
+PACKAGE_NAME = "FlexibleQECSim"
 
 REQUIREMENTS = [
     "numpy",
@@ -30,7 +30,7 @@ setup(
     description=DIST_NAME,
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/JiakaiW/EfficientSurfaceCodeSim",
+    url="https://github.com/JiakaiW/FlexibleQECSim",
     author="Jiakai Wang",
     author_email="jwang2648@wisc.edu",
     license="Apache 2.0",
@@ -51,8 +51,8 @@ setup(
     keywords="surface code erasure decoding",
     python_requires=">=3.7",
     project_urls={
-        # "Documentation": "https://github.com/JiakaiW/EfficientSurfaceCodeSim",
-        "Source Code": "https://github.com/JiakaiW/EfficientSurfaceCodeSim",
+        # "Documentation": "https://github.com/JiakaiW/FlexibleQECSim",
+        "Source Code": "https://github.com/JiakaiW/FlexibleQECSim",
     },
     include_package_data=True,
 )
