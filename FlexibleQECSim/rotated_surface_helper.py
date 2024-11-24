@@ -3,6 +3,7 @@ from typing import List, Dict
 from dataclasses import dataclass
 from itertools import chain
 from FlexibleQECSim.qecc_circ_builder import CircuitStructureHelper
+
 def assign_MX_or_MZ_to_data_qubit_in_XZZX(coord):
     ###################################################
     # Contrary to CSS surface code where the data qubits are all initialized in |0> or |->,

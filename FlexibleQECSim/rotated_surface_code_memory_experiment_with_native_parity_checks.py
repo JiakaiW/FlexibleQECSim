@@ -15,9 +15,13 @@ from FlexibleQECSim.noisy_operations import (
 from FlexibleQECSim.rotated_surface_helper import RotatedSurfaceCodeHelper
 
 
-
 @dataclass
-class RotatedSurfaceCodeMemoryExperimentBuilder(QECCircuitBuilder):    # These attributes are optional and I tend not to change them
+class RotatedSurfaceCodeWithNativeParityChecksMemoryExperimentBuilder(QECCircuitBuilder):
+    """
+    This class is used to build the circuits for the rotated surface code with native parity checks memory experiment.
+    """
+
+    # These attributes are optional and I tend not to change them
     interaction_order: str = 'z'  # Is 'clever' really better than z?
     native_cz: bool = True
     native_cx: bool = False
@@ -57,7 +61,7 @@ class RotatedSurfaceCodeMemoryExperimentBuilder(QECCircuitBuilder):    # These a
         num_meas_q = num_data_q-1
         num_existing_measurement = num_meas_q*(self.rounds+1)+num_data_q
         return num_existing_measurement
-
+    
     def gen_circuit(self, circuit, mode):
         # function that builds the 1 round of error correction
         def append_cycle_actions(noisy: bool):
@@ -222,12 +226,4 @@ class RotatedSurfaceCodeMemoryExperimentBuilder(QECCircuitBuilder):    # These a
 
         build_circ()
 
-    def decode_by_generate_new_circ(self, single_detector_sample, curve, single_measurement_sample):
-        assert curve in ['S', 'L']
-        conditional_circ = self.gen_posterior_circuit(
-            single_measurement_sample)
-        dem = conditional_circ.detector_error_model(
-            approximate_disjoint_errors=True, decompose_errors=True)
-        m = DEM_to_Matching(dem, curve=curve)
-        predicted_observable = m.decode(single_detector_sample)[0]
-        return predicted_observable
+

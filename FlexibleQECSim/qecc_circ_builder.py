@@ -10,11 +10,13 @@ import re
 import numpy as np
 from FlexibleQECSim.error_model import GateErrorModel
 
+
 class CircuitStructureHelper:
     """
     A base class for circuit structure helpers.
     """
     pass
+
 
 @dataclass
 class QECCircuitBuilder:
@@ -23,7 +25,7 @@ class QECCircuitBuilder:
     """
     rounds: int
     distance: int
-    
+
     before_round_error_model: GateErrorModel = GateErrorModel([])
     after_h_error_model: GateErrorModel = GateErrorModel([])
     after_cnot_error_model: GateErrorModel = GateErrorModel([])
@@ -36,7 +38,8 @@ class QECCircuitBuilder:
     erasure_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     normal_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     posterior_circuit: Optional[stim.Cxircuit] = field(init=False, repr=False)
-    deterministic_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
+    deterministic_circuit: Optional[stim.Circuit] = field(
+        init=False, repr=False)
 
     def __post_init__(self):
         # Initialization logic common to all QECCircuitBuilders
@@ -50,6 +53,60 @@ class QECCircuitBuilder:
         # Method to generate a circuit, to be overridden or extended by subclasses
         pass
 
+    def get_normal_qubit_count(self):
+        pass
+
+    def get_num_normal_measurements(self):
+        pass
+
+    def gen_erasure_conversion_circuit(self):
+        # erasure_circuit is used to sample measurement samples which we do decoding on
+        self.next_ancilla_qubit_index_in_list = [
+            self.get_normal_qubit_count()]
+        for attr_name, attr_value in vars(self).items():
+            if isinstance(attr_value, GateErrorModel):
+                attr_value.set_next_ancilla_qubit_index_in_list(
+                    self.next_ancilla_qubit_index_in_list)
+        self.erasure_circuit = stim.Circuit()
+
+        self.gen_circuit(self.erasure_circuit, mode='erasure')
+        self.erasure_circuit.append("MZ",
+                                    np.arange(
+                                        self.get_normal_qubit_count(), self.next_ancilla_qubit_index_in_list[0], dtype=int)
+                                    )  # Measure the virtual erasure ancilla qubits
+
+    def gen_normal_circuit(self):
+        # The normal circuit is only used to generate the static DEM which is then modified by the "naive" or 'Z' decoding method.
+        self.normal_circuit = stim.Circuit()
+        self.gen_circuit(self.normal_circuit, mode='normal')
+
+    def gen_posterior_circuit(self, single_measurement_sample):
+        assert len(single_measurement_sample) == self.erasure_circuit.num_measurements
+
+        # Share a new erasure_measurement_index and the single_measurement_sample to the error models
+        self.erasure_measurement_index_in_list = [self.get_num_normal_measurements()]
+        self.single_shot_measurement_sample_being_decoded = single_measurement_sample
+        for attr_name, attr_value in vars(self).items():
+            if isinstance(attr_value, GateErrorModel):
+                attr_value.set_erasure_measurement_index_in_list(
+                    self.erasure_measurement_index_in_list)
+                attr_value.set_single_measurement_sample(
+                    self.single_shot_measurement_sample_being_decoded)
+
+        self.posterior_circuit = stim.Circuit()
+        self.gen_circuit(self.posterior_circuit, mode='posterior')
+        assert self.erasure_measurement_index_in_list[0] == self.erasure_circuit.num_measurements
+        return self.posterior_circuit
+
+    def decode_by_generate_new_circ(self, single_detector_sample, curve, single_measurement_sample):
+        assert curve in ['S', 'L']
+        conditional_circ = self.gen_posterior_circuit(
+            single_measurement_sample)
+        dem = conditional_circ.detector_error_model(
+            approximate_disjoint_errors=True, decompose_errors=True)
+        m = DEM_to_Matching(dem, curve=curve)
+        predicted_observable = m.decode(single_detector_sample)[0]
+        return predicted_observable
 
 def DEM_to_Matching(model: stim.DetectorErrorModel,
                     single_measurement_sample: np.array = None,
