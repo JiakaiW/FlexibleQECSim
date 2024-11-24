@@ -1,4 +1,4 @@
-from FlexibleQECSim.circuit_builder import *
+from FlexibleQECSim.rotated_surface_memory_experiment_builder import *
 from FlexibleQECSim.error_model import *
 
 import time
@@ -20,7 +20,7 @@ class MCSampleDecodeJob:
         after_cz_error_model = get_2q_error_model(p_e=self.p_e,
                                                   p_p=self.p_p,
                                                   biased=self.biased_erasure)
-        builder = easure_circ_builder(rounds = self.d,
+        builder = RotatedSurfaceCodeMemoryExperimentBuilder(rounds = self.d,
                                       distance= self.d,
                                       after_cz_error_model=after_cz_error_model,
                                       measurement_error=0
