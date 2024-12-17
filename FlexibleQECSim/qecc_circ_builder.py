@@ -26,18 +26,18 @@ class QECCircuitBuilder:
     rounds: int
     distance: int
 
-    before_round_error_model: GateErrorModel = GateErrorModel([])
-    after_h_error_model: GateErrorModel = GateErrorModel([])
-    after_cnot_error_model: GateErrorModel = GateErrorModel([])
-    after_cz_error_model: GateErrorModel = GateErrorModel([])
+    before_round_error_model: GateErrorModel = field(default_factory=lambda: GateErrorModel([]))
+    after_h_error_model: GateErrorModel = field(default_factory=lambda: GateErrorModel([]))
+    after_cnot_error_model: GateErrorModel = field(default_factory=lambda: GateErrorModel([]))
+    after_cz_error_model: GateErrorModel = field(default_factory=lambda: GateErrorModel([]))
     measurement_error: float = 0
-    after_reset_error_model: GateErrorModel = GateErrorModel([])
+    after_reset_error_model: GateErrorModel = field(default_factory=lambda: GateErrorModel([]))
 
     # These attributes will be generated when sampling or decoding.
     helper: Optional[CircuitStructureHelper] = field(init=False, repr=False)
     erasure_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     normal_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
-    posterior_circuit: Optional[stim.Cxircuit] = field(init=False, repr=False)
+    posterior_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     deterministic_circuit: Optional[stim.Circuit] = field(
         init=False, repr=False)
 
