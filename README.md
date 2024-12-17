@@ -31,3 +31,8 @@ pip3 install git+https://github.com/JiakaiW/FlexibleQECSim
 1. Use "deterministic" mode when generating the circuit, and decode as usual. (call decode_by_generating_new_circuit if erasure conversion is involved.)
 2. [(link to demo of importance sampling and decoding)](notebooks/usage_demo.ipynb)
 3. The capability to deterministically inject error allows future extension of this pacakage to simulate undetected leakage (without needing to use stim.TableauSimulator)
+
+
+
+## Known issue:
+when there are no error in the decoding graph (measurement error doesn't count), PyMatching will return an empty array. So don't run simulation with zero error rate for unheraldable errors.
