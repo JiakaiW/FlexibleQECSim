@@ -103,7 +103,6 @@ class RotatedSurfaceCodeWithNativeParityChecksMemoryExperimentBuilder(QECCircuit
                             noisy=noisy,
                             noise_model=self.after_cz_error_model,
                             mode=mode,
-                            native_cz=self.native_cz
                         )
                     else:
                         hadamard_target_qubits = dict['CZ'][1::2]
