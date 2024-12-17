@@ -149,7 +149,6 @@ class DummyInsGenerator(InsGenerator):
         
 @dataclass
 class NormalInsGenerator(InsGeneratorStepwiseProbs):
-    
     instruction_name: Optional[str] = field(default=None)
     instruction_arg: Union[float, List[float]] = field(default=None)
     vectorizable: Optional[bool] = field(default=None)
