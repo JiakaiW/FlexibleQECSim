@@ -120,6 +120,7 @@ def DEM_to_Matching(model: stim.DetectorErrorModel,
     Modified from Craig Gidney's code: https://gist.github.com/Strilanc/a4a5f2f9410f84212f6b2c26d9e46e24/
     and https://github.com/Strilanc/honeycomb-boundaries/blob/main/src/hcb/tools/analysis/decoding.py#L260
     """
+    assert curve in ['S', 'L']
     det_offset = 0
 
     def _iter_model(m: stim.DetectorErrorModel,

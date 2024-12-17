@@ -187,13 +187,13 @@ class RotatedSurfaceCodeWithNativeParityChecksMemoryExperimentBuilder(QECCircuit
             # Also, the tail is responsible for identifying the logical observable.
             ###################################################
             if not self.XZZX:
-                append_measure(circuit=circuit, qubits=self.helper.data_qubits, basis="ZX"[self.is_memory_x], noisy=self.SPAM, noise_model=self.after_measurement_error_model, mode=mode)
+                append_measure(circuit=circuit, qubits=self.helper.data_qubits, basis="ZX"[self.is_memory_x], noisy=self.SPAM, measurement_error=self.measurement_error, mode=mode)
             else:
                 # Whether measuring in Z or X basis has to do with whether the qubit was reset in the circuit head in Z or X basis
                 for q in self.helper.data_qubits:
                     measure_in_Z_when_memory_x = self.helper.data_qubit_to_MX_or_MZ_in_XZZX[q]
                     measure_in_Z = measure_in_Z_when_memory_x if self.is_memory_x else not measure_in_Z_when_memory_x
-                    append_measure(circuit=circuit, qubits=[q], basis="ZX"[measure_in_Z], noisy=self.SPAM, noise_model=self.after_measurement_error_model, mode=mode)
+                    append_measure(circuit=circuit, qubits=[q], basis="ZX"[measure_in_Z], noisy=self.SPAM, measurement_error=self.measurement_error, mode=mode)
 
             # In CSS surface code, only physical Z error can cause logical Z error,
             #   and physical Z error are only picked up by X stabilizers,

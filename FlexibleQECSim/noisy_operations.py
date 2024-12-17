@@ -1,5 +1,5 @@
 import stim
-from typing import List
+from typing import List, Union
 from FlexibleQECSim.error_model import GateErrorModel
 
 
@@ -49,9 +49,9 @@ def append_cnot(circuit: stim.Circuit,
         # control_qubits = qubits[0::2]
         target_qubits = qubits[1::2]
         # control_target_pairs = list(zip(control_qubits,target_qubits ))
-        append_H(target_qubits, noisy=noisy)
-        append_cz(qubits, noisy=noisy)
-        append_H(target_qubits, noisy=noisy)
+        append_H(circuit = circuit, qubits = target_qubits, noisy=noisy, noise_model=noise_model, mode=mode)
+        append_cz(circuit = circuit, qubits = qubits, noisy=noisy, noise_model=noise_model, mode=mode, native_cz=True)
+        append_H(circuit = circuit, qubits = target_qubits, noisy=noisy, noise_model=noise_model, mode=mode)
 
 def append_cz(circuit: stim.Circuit, 
              qubits: List[int],
@@ -71,9 +71,9 @@ def append_cz(circuit: stim.Circuit,
         # control_qubits = qubits[0::2]
         target_qubits = qubits[1::2]
         # control_target_pairs = list(zip(control_qubits,target_qubits ))
-        append_H(target_qubits, noisy=noisy)
-        append_cnot(qubits, noisy=noisy)
-        append_H(target_qubits, noisy=noisy)
+        append_H(circuit = circuit, qubits = target_qubits, noisy=noisy, noise_model=noise_model, mode=mode)
+        append_cnot(circuit = circuit, qubits = qubits, noisy=noisy, noise_model=noise_model, mode=mode, native_cx=True)
+        append_H(circuit = circuit, qubits = target_qubits, noisy=noisy, noise_model=noise_model, mode=mode)
 
 
 def append_reset(circuit: stim.Circuit, 
@@ -95,7 +95,8 @@ def append_measure(circuit: stim.Circuit,
                    qubits: List[int],
                    noisy: bool, 
                    basis: str,
-                   measurement_error: float):
+                   measurement_error: float,
+                   mode:str = None):
     if noisy:
         circuit.append("M" + basis, qubits, measurement_error)
     else:
