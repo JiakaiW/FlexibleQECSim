@@ -78,23 +78,34 @@ class RotatedSurfaceCodeMemoryExperimentBuilder(QECCircuitBuilder):    # These a
             # a dict is like {'CX':[control0,target0,control1,target1,....],'CZ':[control0,target0,control1,target1,....]}
             for dict in self.helper.two_q_gate_targets:
                 if dict['CX'] != []:
-                    append_cnot(
-                        circuit=circuit,
-                        qubits=dict['CX'], 
-                        noisy=noisy,
-                        noise_model=self.after_cnot_error_model,
-                        mode=mode,
-                        native_cx=self.native_cx
-                    )
+                    if self.native_cx:
+                        append_cnot(
+                            circuit=circuit,
+                            qubits=dict['CX'], 
+                            noisy=noisy,
+                            noise_model=self.after_cnot_error_model,
+                            mode=mode,
+                        )
+                    else:
+                        hadamard_target_qubits = dict['CX'][1::2]
+                        append_H(circuit = circuit, qubits = hadamard_target_qubits, noisy=noisy, noise_model=self.after_h_error_model, mode=mode)
+                        append_cz(circuit = circuit, qubits = dict['CX'], noisy=noisy, noise_model=self.after_cz_error_model, mode=mode)
+                        append_H(circuit = circuit, qubits = hadamard_target_qubits, noisy=noisy, noise_model=self.after_h_error_model, mode=mode)
                 if dict['CZ'] != []:
-                    append_cz(
-                        circuit=circuit,
-                        qubits=dict['CZ'], 
-                        noisy=noisy,
-                        noise_model=self.after_cz_error_model,
-                        mode=mode,
-                        native_cz=self.native_cz
-                    )
+                    if self.native_cz:
+                        append_cz(
+                            circuit=circuit,
+                            qubits=dict['CZ'], 
+                            noisy=noisy,
+                            noise_model=self.after_cz_error_model,
+                            mode=mode,
+                            native_cz=self.native_cz
+                        )
+                    else:
+                        hadamard_target_qubits = dict['CZ'][1::2]
+                        append_H(circuit = circuit, qubits = hadamard_target_qubits, noisy=noisy, noise_model=self.after_h_error_model, mode=mode)
+                        append_cnot(circuit = circuit, qubits = dict['CZ'], noisy=noisy, noise_model=self.after_cz_error_model, mode=mode)
+                        append_H(circuit = circuit, qubits = hadamard_target_qubits, noisy=noisy, noise_model=self.after_h_error_model, mode=mode)
             append_H(
                 circuit=circuit,
                 qubits=self.helper.meas_q_with_before_and_after_round_H, 
