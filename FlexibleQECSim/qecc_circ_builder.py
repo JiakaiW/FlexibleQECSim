@@ -37,6 +37,7 @@ class QECCircuitBuilder:
     helper: Optional[CircuitStructureHelper] = field(init=False, repr=False)
     erasure_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     normal_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
+    dummy_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     posterior_circuit: Optional[stim.Circuit] = field(init=False, repr=False)
     deterministic_circuit: Optional[stim.Circuit] = field(
         init=False, repr=False)
@@ -79,6 +80,11 @@ class QECCircuitBuilder:
         # The normal circuit is only used to generate the static DEM which is then modified by the "naive" or 'Z' decoding method.
         self.normal_circuit = stim.Circuit()
         self.gen_circuit(self.normal_circuit, mode='normal')
+
+    def gen_dummy_circuit(self):
+        # The dummy circuit is used to for the error models to count the number of times they are called
+        self.dummy_circuit = stim.Circuit()
+        self.gen_circuit(self.dummy_circuit, mode='dummy')
 
     def gen_posterior_circuit(self, single_measurement_sample):
         assert len(single_measurement_sample) == self.erasure_circuit.num_measurements
