@@ -1,5 +1,5 @@
 import stim
-from typing import List, string
+from typing import List
 from FlexibleQECSim.error_model import GateErrorModel
 
 
@@ -7,7 +7,7 @@ def append_before_round_error(circuit: stim.Circuit,
                               qubits: List[int],
                               noisy: bool,
                               noise_model: GateErrorModel,
-                              mode: string):
+                              mode: str):
     circuit.append("TICK")
     if noisy and not noise_model.trivial:
         list_of_args = noise_model.get_instruction(qubits=[qubits],
@@ -21,7 +21,7 @@ def append_H(circuit: stim.Circuit,
              qubits: List[int], 
              noisy: bool, 
              noise_model: GateErrorModel,
-             mode: string):
+             mode: str):
     circuit.append('H', qubits)
     if noisy and not noise_model.trivial:
         list_of_args = noise_model.get_instruction(qubits=[qubits],
@@ -35,7 +35,7 @@ def append_cnot(circuit: stim.Circuit,
                 qubits: List[int],
                 noisy: bool,
                 noise_model: GateErrorModel,
-                mode: string,
+                mode: str,
                 native_cx: bool):
     if native_cx:
         circuit.append('CNOT', qubits)
@@ -57,7 +57,7 @@ def append_cz(circuit: stim.Circuit,
              qubits: List[int],
              noisy: bool, 
              noise_model: GateErrorModel,
-             mode: string,
+             mode: str,
              native_cz: bool):
     if native_cz:
         circuit.append('CZ', qubits)
@@ -81,7 +81,7 @@ def append_reset(circuit: stim.Circuit,
                  noisy: bool, 
                  basis: str,
                  noise_model: GateErrorModel,
-                 mode: string):
+                 mode: str):
     assert basis == "X" or basis == "Z", "basis must be X or Z"
     circuit.append("R" + basis, qubits)
     if noisy and not noise_model.trivial:
